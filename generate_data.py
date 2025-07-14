@@ -66,7 +66,14 @@ for _, user in users_df.iterrows():
     num_shipments = random.randint(1, 7)
     for _ in range(num_shipments):
         ship_from = generate_address(country_code=user['locale'])
-        ship_to = generate_address()
+        is_domestic = random.choices([True, False], weights=[95, 5])[0]
+        if is_domestic:
+            ship_to_country = ship_from['countryCode']  # same country
+        else:
+            # pick a different country than ship_from but from allowed locales
+            other_locales = [loc for loc in locales if loc != ship_from['countryCode']]
+            ship_to_country = random.choice(other_locales)
+        ship_to = generate_address(country_code=ship_to_country)
         account_number = faker.credit_card_number()
 
         row = {
