@@ -9,6 +9,14 @@ faker = Faker()
 def generate_uuid():
     return ''.join(random.choices(string.ascii_lowercase + string.digits, k=16))
 
+def fraud_not():
+    is_fraud = random.choices([True, False], weights=[5, 95])[0]
+    if is_fraud:
+        fraud_type = random.choice(['UA', 'PF', 'CC'])
+    else:
+        fraud_type = 'NO'
+    return is_fraud, fraud_type
+
 def generate_address(country_code=None):
     if country_code is None:
         country_code = random.choice(locales)
@@ -41,6 +49,8 @@ for _ in range(num_us_users):
     }
     users.append(user)
 
+
+
 # Other locales evenly
 other_locales_cycle = np.tile(non_us_locales, int(np.ceil(num_other_users / len(non_us_locales))))
 other_locales_cycle = other_locales_cycle[:num_other_users]
@@ -55,6 +65,9 @@ for idx in range(num_us_users, num_users):
 
 users_df = pd.DataFrame(users)
 users_df['email'] = users_df['username'].apply(lambda x: faker.email())
+
+for _ in range(num_users):
+    users_df['is_fraud'], users_df['fraud_type'] = fraud_not()
 
 print(users_df['locale'].value_counts())
 print(f"Unique UUIDs: {users_df['uuid'].nunique()}")
@@ -81,6 +94,8 @@ for _, user in users_df.iterrows():
             "username": user['username'],
             "email": user['email'],
             "locale": user['locale'],
+            'is_fraud': user['is_fraud'],
+            'fraud_type': user['fraud_type'],
 
             # Ship From
             "shipFrom_addressLine": ship_from['addressLine'],
@@ -98,7 +113,7 @@ for _, user in users_df.iterrows():
 
             # Payment Info
             "payment_accountNumber": account_number,
-            "payment_addressLine": ship_from['addressLine']  # same as shipFrom
+            "payment_addressLine": ship_from['addressLine'],  # same as shipFrom
         }
         shipment_rows.append(row)
 
