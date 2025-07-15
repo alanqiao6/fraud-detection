@@ -158,6 +158,50 @@ def user_logs(uuid):
 
     return jsonify(user_df.to_dict(orient="records"))
 
+@app.route("/fraud_map", methods=["GET"])
+def fraud_map():
+    df = pd.read_csv(temp_path)
+
+    # static map: code → name
+    code_to_name = {
+        'US': 'United States of America',
+        'DE': 'Germany',
+        'AU': 'Australia',
+        'FR': 'France',
+        'KO': 'South Korea',
+        'CA': 'Canada',
+        'MX': 'Mexico',
+        'KY': 'Cayman Islands',
+        'SA': 'Saudi Arabia',
+        'MY': 'Malaysia'
+    }
+
+    # map to country name
+    df['countryName'] = df['shipFrom_countryCode'].map(code_to_name)
+
+    geo = (
+        df.groupby('countryName')
+        .agg(
+            fraud=('prediction', 'sum'),
+            total=('prediction', 'count')
+        )
+        .reset_index()
+        .sort_values(by='fraud', ascending=False)
+    )
+
+    # create response
+    result = []
+    for _, row in geo.iterrows():
+        result.append({
+            "countryName": row["countryName"] or "Unknown",
+            "fraud": int(row["fraud"]),
+            "total": int(row["total"])
+        })
+
+    return jsonify(result)
+
+
+
 
 
 if __name__ == "__main__":

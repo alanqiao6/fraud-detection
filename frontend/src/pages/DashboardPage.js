@@ -3,6 +3,8 @@ import axios from "axios";
 import TimeTrendsChart from "../components/TimeTrendsChart";
 import UserLogsModal from "../components/UserLogsModal";
 import UserBehaviorTable from "../components/UserBehaviorTable";
+import FraudMap from "../components/FraudMap";
+
 
 const DashboardPage = () => {
   const [summary, setSummary] = useState(null);
@@ -51,6 +53,10 @@ const DashboardPage = () => {
             ))}
           </ul>
         )}
+      </section>
+
+      <section style={{ marginTop: "20px" }}>
+        <FraudMap />
       </section>
 
       <section style={{ marginTop: "20px" }}>
