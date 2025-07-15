@@ -50,6 +50,7 @@ We designed it as a proof-of-concept to replace third-party fraud detection tool
 ## Run the Project
 
 ### Backend
+'''bash
 cd backend
 pip install -r requirements.txt
 python app.py
@@ -62,6 +63,7 @@ npm install
 npm start
 
 Runs at: http://localhost:3000
+'''
 
 
 
