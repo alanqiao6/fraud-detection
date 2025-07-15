@@ -1,17 +1,6 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 
-function UserBehaviorTable() {
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    axios.get("http://127.0.0.1:5000/user_behavior")
-      .then(res => setUsers(res.data))
-      .catch(console.error);
-  }, []);
-
-  if (users.length === 0) return <p>Loading user behavior…</p>;
-
+const UserBehaviorTable = ({ data }) => {
   return (
     <div>
       <h2>User Behavior</h2>
@@ -26,19 +15,19 @@ function UserBehaviorTable() {
           </tr>
         </thead>
         <tbody>
-          {users.map(user => (
-            <tr key={user.uuid}>
-              <td>{user.uuid}</td>
-              <td>{user.logs}</td>
-              <td>{user.unique_accounts}</td>
-              <td>{user.frauds}</td>
-              <td>{user.fraud_rate}</td>
+          {data.map((row) => (
+            <tr key={row.uuid}>
+              <td>{row.uuid}</td>
+              <td>{row.logs}</td>
+              <td>{row.unique_accounts}</td>
+              <td>{row.frauds}</td>
+              <td>{row.fraud_rate}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
   );
-}
+};
 
 export default UserBehaviorTable;

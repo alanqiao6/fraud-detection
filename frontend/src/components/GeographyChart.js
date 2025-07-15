@@ -1,40 +1,38 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 import { Bar } from "react-chartjs-2";
 
-function GeographyChart() {
-  const [geo, setGeo] = useState([]);
+const GeographyChart = ({ data }) => {
+  const labels = data.map(row => row.shipFrom_countryCode);
+  const fraud = data.map(row => row.fraud);
+  const notFraud = data.map(row => row.not_fraud);
 
-  useEffect(() => {
-    axios.get("http://127.0.0.1:5000/geography")
-      .then(res => setGeo(res.data))
-      .catch(console.error);
-  }, []);
-
-  if (geo.length === 0) return <p>Loading geography…</p>;
-
-  const data = {
-    labels: geo.map(g => g.shipFrom_countryCode),
+  const chartData = {
+    labels,
     datasets: [
       {
         label: "Fraud",
-        data: geo.map(g => g.fraud),
-        backgroundColor: "red"
+        data: fraud,
+        backgroundColor: "#ef4444",
       },
       {
         label: "Not Fraud",
-        data: geo.map(g => g.not_fraud),
-        backgroundColor: "green"
-      }
-    ]
+        data: notFraud,
+        backgroundColor: "#10b981",
+      },
+    ],
   };
 
-  return (
-    <div>
-      <h2>Fraud by Geography</h2>
-      <Bar data={data} />
-    </div>
-  );
-}
+  const options = {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: "Fraud by Geography",
+      },
+    },
+  };
+
+  return <Bar data={chartData} options={options} />;
+};
 
 export default GeographyChart;

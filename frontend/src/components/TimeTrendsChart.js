@@ -1,42 +1,40 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 import { Line } from "react-chartjs-2";
 
-function TimeTrendsChart() {
-  const [trends, setTrends] = useState([]);
+const TimeTrendsChart = ({ data }) => {
+  const labels = data.map(row => row.date);
+  const fraud = data.map(row => row.fraud);
+  const notFraud = data.map(row => row.not_fraud);
 
-  useEffect(() => {
-    axios.get("http://127.0.0.1:5000/time_trends")
-      .then(res => setTrends(res.data))
-      .catch(console.error);
-  }, []);
-
-  if (trends.length === 0) return <p>Loading time trends…</p>;
-
-  const data = {
-    labels: trends.map(t => t.date),
+  const chartData = {
+    labels,
     datasets: [
       {
         label: "Fraud",
-        data: trends.map(t => t.fraud),
-        borderColor: "red",
-        fill: false
+        data: fraud,
+        borderColor: "#ef4444",
+        fill: false,
       },
       {
         label: "Not Fraud",
-        data: trends.map(t => t.not_fraud),
-        borderColor: "green",
-        fill: false
-      }
-    ]
+        data: notFraud,
+        borderColor: "#10b981",
+        fill: false,
+      },
+    ],
   };
 
-  return (
-    <div>
-      <h2>Time Trends</h2>
-      <Line data={data} />
-    </div>
-  );
-}
+  const options = {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: "Fraud over Time",
+      },
+    },
+  };
+
+  return <Line data={chartData} options={options} />;
+};
 
 export default TimeTrendsChart;
