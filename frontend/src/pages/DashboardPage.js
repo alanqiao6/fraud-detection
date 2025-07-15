@@ -9,6 +9,8 @@ import GeographyChart from "../components/GeographyChart";
 import "./DashboardPage.css";
 import TopOffendersTable from "../components/TopOffendersTable";
 import TimeTrendsChartWithFilter from "../components/TimeTrendsChartWithFilter";
+import { Link } from "react-router-dom";
+
 
 
 
@@ -38,18 +40,22 @@ const DashboardPage = () => {
     <div className="dashboard-page">
       {/* Top Bar */}
       <div className="topbar">
-        <img
-          src="/static/images/ups.png"
-          alt="UPS Logo"
-          className="logo"
-        />
+        <Link to="/">
+            <img
+            src="/static/images/ups.png"
+            alt="UPS Logo"
+            className="logo"
+            style={{ cursor: "pointer" }}
+            />
+        </Link>
         <div className="header-text">
-          <h1>UPS Fraud Detection Dashboard</h1>
-          <p className="tagline">
+            <h1>UPS Fraud Detection Dashboard</h1>
+            <p className="tagline">
             Built for secure log verification and anomaly detection
-          </p>
+            </p>
         </div>
-      </div>
+    </div>
+
 
       {/* Main Container */}
       <div className="container">
