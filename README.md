@@ -51,7 +51,7 @@ We designed it as a proof-of-concept to replace third-party fraud detection tool
 
 ### Clone Repository
 ```
-   git clone <repository_url>
+   git clone https://github.com/2025-UPS-Hackathon/Hack-Attack.git
    cd Hack-Attack
 ```
 
