@@ -44,9 +44,9 @@ We designed it as a proof-of-concept to replace third-party fraud detection tool
   - User behavior table with option to inspect logs for flagged users
 - Communicates with backend via `axios`
 
-  ![Visualization1](Visualization1.png)
-  ![Visualization2](Visualization2.png)
-  ![Visualization3](Visualization3.png)
+  ![Visualization1](images/Visualization1.png)
+  ![Visualization2](images/Visualization2.png)
+  ![Visualization3](images/Visualization3.png)
 
 ## Run the Project
 
