@@ -7,6 +7,8 @@ app = Flask(__name__)
 CORS(app)  # if React runs on localhost:3000
 
 model = joblib.load("../fraud_model_xgb.pkl")
+PREDICTIONS_FILE = "latest_predictions.csv"
+
 
 @app.route("/")
 def home():
@@ -55,8 +57,78 @@ def upload():
     preds = model.predict(X)
     df["prediction"] = preds
 
-    result = df[["uuid", "prediction"]].to_dict(orient="records")
-    return jsonify(result)
+    df.to_csv(PREDICTIONS_FILE, index=False)
+    return jsonify({"message": "✅ File processed and predictions saved."})
+
+@app.route("/summary", methods=["GET"])
+def summary():
+    df = pd.read_csv(PREDICTIONS_FILE)
+
+    total_logs = len(df)
+    total_users = df['uuid'].nunique()
+    fraud_count = (df['prediction'] == 1).sum()
+    not_fraud_count = (df['prediction'] == 0).sum()
+    fraud_rate = round((fraud_count / total_logs) * 100, 2)
+
+    return jsonify({
+        "total_logs": total_logs,
+        "total_users": total_users,
+        "fraud": int(fraud_count),
+        "not_fraud": int(not_fraud_count),
+        "fraud_rate": fraud_rate
+    })
+
+@app.route("/geography", methods=["GET"])
+def geography():
+    df = pd.read_csv(PREDICTIONS_FILE)
+
+    geo = (
+        df.groupby('shipFrom_countryCode')['prediction']
+        .value_counts()
+        .unstack(fill_value=0)
+        .reset_index()
+        .rename(columns={0: "not_fraud", 1: "fraud"})
+    )
+
+    return jsonify(geo.to_dict(orient="records"))
+
+
+@app.route("/time_trends", methods=["GET"])
+def time_trends():
+    df = pd.read_csv(PREDICTIONS_FILE)
+
+    df['shipment_datetime'] = pd.to_datetime(df['ship_date'] + ' ' + df['ship_time'])
+    df['date'] = df['shipment_datetime'].dt.date
+
+    trends = (
+        df.groupby('date')['prediction']
+        .value_counts()
+        .unstack(fill_value=0)
+        .reset_index()
+        .rename(columns={0: "not_fraud", 1: "fraud"})
+        .sort_values("date")
+    )
+
+    return jsonify(trends.to_dict(orient="records"))
+
+
+@app.route("/user_behavior", methods=["GET"])
+def user_behavior():
+    df = pd.read_csv(PREDICTIONS_FILE)
+
+    behavior = (
+        df.groupby('uuid')
+        .agg(
+            logs=('uuid', 'count'),
+            unique_accounts=('payment_accountNumber', 'nunique'),
+            frauds=('prediction', 'sum')
+        )
+        .reset_index()
+    )
+
+    behavior['fraud_rate'] = round((behavior['frauds'] / behavior['logs']) * 100, 2)
+
+    return jsonify(behavior.to_dict(orient="records"))
 
 
 if __name__ == "__main__":
