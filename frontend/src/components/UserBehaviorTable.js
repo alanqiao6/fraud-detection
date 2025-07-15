@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
+import { BACKEND_URL } from "./config";
+
 
 const UserBehaviorTable = ({ onInvestigate }) => {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:5000/user_behavior")
+    axios.get(`${BACKEND_URL}/user_behavior`)
       .then(res => {
         const formatted = res.data.map((row, index) => ({
           id: index, // needed for DataGrid

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 import { scaleLinear } from "d3-scale";
+import { BACKEND_URL } from "./config";
+
 
 const geoUrl =
   "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
@@ -11,7 +13,7 @@ const FraudMap = () => {
   const [tooltipContent, setTooltipContent] = useState("");
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:5000/fraud_map")
+    axios.get(`${BACKEND_URL}/fraud_map`)
       .then(res => setData(res.data))
       .catch(err => console.error(err));
   }, []);

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { BACKEND_URL } from "./config";
+
 
 const UserLogsModal = ({ uuid, onClose }) => {
   const [logs, setLogs] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://127.0.0.1:5000/user_logs/${uuid}`)
-      .then(res => setLogs(res.data))
+    axios.get(`${BACKEND_URL}/user_logs/${uuid}`)
+    .then(res => setLogs(res.data))
       .catch(err => console.error(err));
   }, [uuid]);
 

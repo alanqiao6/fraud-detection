@@ -10,6 +10,8 @@ import "./DashboardPage.css";
 import TopOffendersTable from "../components/TopOffendersTable";
 import TimeTrendsChartWithFilter from "../components/TimeTrendsChartWithFilter";
 import { Link } from "react-router-dom";
+import { BACKEND_URL } from "../config";
+
 
 
 
@@ -21,15 +23,15 @@ const DashboardPage = () => {
   const [investigatingUuid, setInvestigatingUuid] = useState(null);
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:5000/summary")
+    axios.get(`${BACKEND_URL}/summary`)
       .then(res => setSummary(res.data))
       .catch(err => console.error(err));
 
-    axios.get("http://127.0.0.1:5000/geography")
+    axios.get(`${BACKEND_URL}/geography`)
       .then(res => setGeoData(res.data))
       .catch(err => console.error(err));
 
-    axios.get("http://127.0.0.1:5000/time_trends")
+    axios.get(`${BACKEND_URL}/time_trends`)
       .then(res => setTimeTrends(res.data))
       .catch(err => console.error(err));
   }, []);
