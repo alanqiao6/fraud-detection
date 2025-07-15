@@ -49,10 +49,14 @@ We designed it as a proof-of-concept to replace third-party fraud detection tool
 
 ## Run the Project
 
+### Clone Repository
+   $ git clone <repository_url>
+   $ cd Hack-Attack
+
 ### Backend
-'''bash
-cd backend
-pip install -r requirements.txt
+
+$ cd backend
+$ pip install -r requirements.txt
 python app.py
 
 Runs at: http://localhost:5000
@@ -63,7 +67,7 @@ npm install
 npm start
 
 Runs at: http://localhost:3000
-'''
+
 
 
 
