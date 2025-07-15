@@ -23,7 +23,7 @@ function UploadPage() {
     formData.append("file", file);
 
     try {
-      await axios.post("http://127.0.0.1:5000/upload", formData, {
+      await axios.post("https://hack-attack-164352439456.us-central1.run.app/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
