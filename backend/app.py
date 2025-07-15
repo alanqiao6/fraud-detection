@@ -124,15 +124,20 @@ def time_trends():
     df['date'] = df['shipment_datetime'].dt.date
 
     trends = (
-        df.groupby('date')['prediction']
+        df.groupby(['date', 'shipFrom_countryCode'])['prediction']
         .value_counts()
         .unstack(fill_value=0)
         .reset_index()
-        .rename(columns={0: "not_fraud", 1: "fraud"})
+        .rename(columns={
+            0: "not_fraud",
+            1: "fraud",
+            'shipFrom_countryCode': 'country'
+        })
         .sort_values("date")
     )
 
     return jsonify(trends.to_dict(orient="records"))
+
 
 @app.route("/user_behavior", methods=["GET"])
 def user_behavior():

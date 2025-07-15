@@ -38,7 +38,11 @@ const FraudBarChart = ({ data }) => {
     },
   };
 
-  return <Bar data={chartData} options={options} />;
+  return (
+    <div style={{ width: "300px", height: "300px", margin: "0 auto" }}>
+      <Bar data={chartData} options={{ ...options, maintainAspectRatio: false }} />
+    </div>
+  );
 };
 
 export default FraudBarChart;
