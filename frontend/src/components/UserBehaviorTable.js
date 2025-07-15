@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
-import { BACKEND_URL } from "./config";
 
 
 const UserBehaviorTable = ({ onInvestigate }) => {

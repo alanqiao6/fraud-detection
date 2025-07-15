@@ -10,7 +10,6 @@ import "./DashboardPage.css";
 import TopOffendersTable from "../components/TopOffendersTable";
 import TimeTrendsChartWithFilter from "../components/TimeTrendsChartWithFilter";
 import { Link } from "react-router-dom";
-import { BACKEND_URL } from "../config";
 
 
 
@@ -23,15 +22,15 @@ const DashboardPage = () => {
   const [investigatingUuid, setInvestigatingUuid] = useState(null);
 
   useEffect(() => {
-    axios.get(`${BACKEND_URL}/summary`)
+    axios.get("https://hack-attack-164352439456.us-central1.run.app/summary")
       .then(res => setSummary(res.data))
       .catch(err => console.error(err));
 
-    axios.get(`${BACKEND_URL}/geography`)
+    axios.get("https://hack-attack-164352439456.us-central1.run.app/geography")
       .then(res => setGeoData(res.data))
       .catch(err => console.error(err));
 
-    axios.get(`${BACKEND_URL}/time_trends`)
+    axios.get("https://hack-attack-164352439456.us-central1.run.app/time_trends")
       .then(res => setTimeTrends(res.data))
       .catch(err => console.error(err));
   }, []);
