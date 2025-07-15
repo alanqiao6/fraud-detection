@@ -30,8 +30,14 @@ const TimeTrendsChartWithFilter = ({ data }) => {
     grouped[d.date] += d.fraud;
   });
 
-  const labels = Object.keys(grouped).sort();
-  const counts = labels.map(date => grouped[date]);
+  const dates = Object.keys(grouped).sort();
+
+  const labels = dates.map(date => {
+    const d = new Date(date);
+    return `${d.getDate()} ${d.toLocaleString('default', { month: 'short' })}`;
+  });
+  
+  const counts = dates.map(date => grouped[date]);
 
   const chartData = {
     labels,
