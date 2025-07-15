@@ -20,6 +20,10 @@ We designed it as a proof-of-concept to replace third-party fraud detection tool
 - Processes uploaded CSV logs, performs feature engineering, encodes variables, and predicts fraud
 - Endpoints return JSON data for frontend visualizations
 
+## Limitations & Future Considerations
+- Since real shipment data was unavailable, the model was trained and tested entirely on generated mock data. Training on synthetic data was the best we could do for this proof-of-concept, but we would like to validate and refine the model on real operational data to assess its true effectiveness.
+- The current model is binary (fraud/not fraud). With more complex and richer data, we would like to develop a multi-class classification model to detect and distinguish between specific fraud types more accurately.
+
 ### Example Endpoints
 
 | Method | Endpoint             | Description |
@@ -46,7 +50,6 @@ We designed it as a proof-of-concept to replace third-party fraud detection tool
 ## Run the Project
 
 ### Backend
-```bash
 cd backend
 pip install -r requirements.txt
 python app.py
@@ -59,6 +62,7 @@ npm install
 npm start
 
 Runs at: http://localhost:3000
+
 
 
 ## Limitations & Future Considerations
