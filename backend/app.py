@@ -87,14 +87,15 @@ def geography():
     df = pd.read_csv(temp_path)
 
     geo = (
-        df.groupby('shipFrom_countryCode')['prediction']
-        .value_counts()
-        .unstack(fill_value=0)
-        .reset_index()
-        .rename(columns={0: "not_fraud", 1: "fraud"})
+        df[df["prediction"] == 1]
+        .groupby('shipFrom_countryCode')
+        .size()
+        .reset_index(name='fraud')
+        .sort_values(by='fraud', ascending=False)
     )
 
     return jsonify(geo.to_dict(orient="records"))
+
 
 @app.route("/time_trends", methods=["GET"])
 def time_trends():
@@ -118,6 +119,7 @@ def time_trends():
 def user_behavior():
     df = pd.read_csv(temp_path)
 
+    # Aggregate metrics
     behavior = (
         df.groupby('uuid')
         .agg(
@@ -128,9 +130,34 @@ def user_behavior():
         .reset_index()
     )
 
+    # Calculate fraud rate
     behavior['fraud_rate'] = round((behavior['frauds'] / behavior['logs']) * 100, 2)
 
-    return jsonify(behavior.to_dict(orient="records"))
+    # Grab the *first* locale and shipFrom_countryCode per uuid
+    extra_cols = df.groupby('uuid').agg(
+        locale=('locale', 'first'),
+        shipFrom_countryCode=('shipFrom_countryCode', 'first')
+    ).reset_index()
+
+    # Merge extra info
+    full = pd.merge(behavior, extra_cols, on='uuid', how='left')
+
+    # Optional: sort by most frauds first
+    full = full.sort_values(by='frauds', ascending=False)
+
+    return jsonify(full.to_dict(orient="records"))
+
+
+@app.route("/user_logs/<uuid>", methods=["GET"])
+def user_logs(uuid):
+    df = pd.read_csv(temp_path)
+    user_df = df[df["uuid"] == uuid]
+
+    if user_df.empty:
+        return jsonify({"error": f"No logs found for uuid: {uuid}"}), 404
+
+    return jsonify(user_df.to_dict(orient="records"))
+
 
 
 if __name__ == "__main__":
