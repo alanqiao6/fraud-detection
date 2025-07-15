@@ -9,10 +9,10 @@ from sklearn.preprocessing import LabelEncoder
 app = Flask(__name__)
 CORS(app)
 
-model = joblib.load("../model/fraud_model_xgb.pkl")
-le_locale = joblib.load("../model/locale_encoder.pkl")
-le_from = joblib.load("../model/shipFrom_countryCode_encoder.pkl")
-le_to = joblib.load("../model/shipTo_countryCode_encoder.pkl")
+model = joblib.load("model/fraud_model_xgb.pkl")
+le_locale = joblib.load("model/locale_encoder.pkl")
+le_from = joblib.load("model/shipFrom_countryCode_encoder.pkl")
+le_to = joblib.load("model/shipTo_countryCode_encoder.pkl")
 
 # create a temp file
 temp_fd, temp_path = tempfile.mkstemp(suffix='.csv')
