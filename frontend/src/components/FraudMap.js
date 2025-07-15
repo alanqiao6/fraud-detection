@@ -13,7 +13,7 @@ const FraudMap = () => {
   const [tooltipContent, setTooltipContent] = useState("");
 
   useEffect(() => {
-    axios.get(`${BACKEND_URL}/fraud_map`)
+    axios.get("https://hack-attack-164352439456.us-central1.run.app/fraud_map")
       .then(res => setData(res.data))
       .catch(err => console.error(err));
   }, []);

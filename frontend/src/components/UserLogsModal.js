@@ -7,7 +7,7 @@ const UserLogsModal = ({ uuid, onClose }) => {
   const [logs, setLogs] = useState([]);
 
   useEffect(() => {
-    axios.get(`${BACKEND_URL}/user_logs/${uuid}`)
+    axios.get(`https://hack-attack-164352439456.us-central1.run.app/user_logs/${uuid}`)
     .then(res => setLogs(res.data))
       .catch(err => console.error(err));
   }, [uuid]);

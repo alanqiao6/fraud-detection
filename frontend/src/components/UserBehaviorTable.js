@@ -8,7 +8,7 @@ const UserBehaviorTable = ({ onInvestigate }) => {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    axios.get(`${BACKEND_URL}/user_behavior`)
+    axios.get("https://hack-attack-164352439456.us-central1.run.app/user_behavior")
       .then(res => {
         const formatted = res.data.map((row, index) => ({
           id: index, // needed for DataGrid
