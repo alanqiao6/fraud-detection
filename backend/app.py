@@ -86,15 +86,34 @@ def summary():
 def geography():
     df = pd.read_csv(temp_path)
 
-    geo = (
+    # Calculate fraud counts
+    fraud_df = (
         df[df["prediction"] == 1]
-        .groupby('shipFrom_countryCode')
+        .groupby("shipFrom_countryCode")
         .size()
-        .reset_index(name='fraud')
-        .sort_values(by='fraud', ascending=False)
+        .reset_index(name="fraud")
     )
 
+    # Calculate not-fraud counts
+    not_fraud_df = (
+        df[df["prediction"] == 0]
+        .groupby("shipFrom_countryCode")
+        .size()
+        .reset_index(name="not_fraud")
+    )
+
+    # Merge fraud and not-fraud counts
+    geo = pd.merge(fraud_df, not_fraud_df, on="shipFrom_countryCode", how="outer").fillna(0)
+
+    # Convert counts to integers
+    geo["fraud"] = geo["fraud"].astype(int)
+    geo["not_fraud"] = geo["not_fraud"].astype(int)
+
+    # Optional: sort by fraud descending
+    geo = geo.sort_values(by="fraud", ascending=False)
+
     return jsonify(geo.to_dict(orient="records"))
+
 
 
 @app.route("/time_trends", methods=["GET"])

@@ -37,7 +37,7 @@ const FraudMap = () => {
 
   return (
     <div>
-      <h3>Fraud by Geography</h3>
+      <h3>Fraud Percentage by Country</h3>
       <ComposableMap
         projectionConfig={{ scale: 100 }}  // ↓ smaller map
         width={800}

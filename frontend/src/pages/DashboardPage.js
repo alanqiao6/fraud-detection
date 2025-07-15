@@ -4,6 +4,12 @@ import TimeTrendsChart from "../components/TimeTrendsChart";
 import UserLogsModal from "../components/UserLogsModal";
 import UserBehaviorTable from "../components/UserBehaviorTable";
 import FraudMap from "../components/FraudMap";
+import FraudBarChart from "../components/FraudBarChart";
+import GeographyChart from "../components/GeographyChart";
+import "./DashboardPage.css";
+import TopOffendersTable from "../components/TopOffendersTable";
+import TimeTrendsChartWithFilter from "../components/TimeTrendsChartWithFilter";
+
 
 
 const DashboardPage = () => {
@@ -26,54 +32,76 @@ const DashboardPage = () => {
       .catch(err => console.error(err));
   }, []);
 
-  if (!summary) return <p>Loading...</p>;
+  if (!summary) return <p>Loading dashboard...</p>;
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Dashboard</h1>
+    <div className="dashboard-page">
+      {/* Top Bar */}
+      <div className="topbar">
+        <img
+          src="/static/images/ups.png"
+          alt="UPS Logo"
+          className="logo"
+        />
+        <div className="header-text">
+          <h1>UPS Fraud Detection Dashboard</h1>
+          <p className="tagline">
+            Built for secure log verification and anomaly detection
+          </p>
+        </div>
+      </div>
 
-      <section>
-        <h2>Fraud Summary</h2>
-        <p>Fraudulent Logs: {summary.fraud}</p>
-        <p>Non-Fraudulent Logs: {summary.not_fraud}</p>
-        <p>Total Logs: {summary.total_logs}</p>
-        <p>Fraud Rate: {summary.fraud_rate}%</p>
-      </section>
+      {/* Main Container */}
+      <div className="container">
+        <div className="card">
+          <h2>Fraud Summary</h2>
+          <div className="summary-stats">
+            <div><strong>Fraudulent Logs:</strong> {summary.fraud}</div>
+            <div><strong>Non-Fraudulent Logs:</strong> {summary.not_fraud}</div>
+            <div><strong>Total Logs:</strong> {summary.total_logs}</div>
+            <div><strong>Fraud Rate:</strong> {summary.fraud_rate}%</div>
+          </div>
+          <FraudBarChart data={summary} />
+        </div>
 
-      <section style={{ marginTop: "20px" }}>
-        <h2>Fraud by Geography</h2>
-        {geoData.length === 0 ? (
-          <p>No fraud detected in any geography.</p>
-        ) : (
-          <ul>
-            {geoData.map(row => (
-              <li key={row.shipFrom_countryCode}>
-                {row.shipFrom_countryCode}: {row.fraud} frauds
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+        <div className="card">
+          <h2>Fraud by Geography</h2>
+          {geoData.length === 0 ? (
+            <p>No fraud detected in any geography.</p>
+          ) : (
+            <GeographyChart data={geoData} />
+          )}
+        </div>
 
-      <section style={{ marginTop: "20px" }}>
-        <FraudMap />
-      </section>
+        <div className="card">
+            <TopOffendersTable data={geoData} />
+        </div>
 
-      <section style={{ marginTop: "20px" }}>
-        <h2>Time-based Trends</h2>
-        <TimeTrendsChart data={timeTrends} />
-      </section>
+        <div className="card">
+          <h2>Fraud Map</h2>
+          <FraudMap />
+        </div>
 
-      <section style={{ marginTop: "20px" }}>
-        <h2>Flagged Users</h2>
-        <UserBehaviorTable onInvestigate={setInvestigatingUuid} />
-        {investigatingUuid && (
-          <UserLogsModal
-            uuid={investigatingUuid}
-            onClose={() => setInvestigatingUuid(null)}
-          />
-        )}
-      </section>
+        <div className="card">
+          <h2>Time-based Trends</h2>
+          <TimeTrendsChartWithFilter data={timeTrends} />
+        </div>
+
+        <div className="card">
+          <h2>Flagged Users</h2>
+          <UserBehaviorTable onInvestigate={setInvestigatingUuid} />
+          {investigatingUuid && (
+            <UserLogsModal
+              uuid={investigatingUuid}
+              onClose={() => setInvestigatingUuid(null)}
+            />
+          )}
+        </div>
+      </div>
+
+      <footer>
+        <p>© 2025 UPS Hackathon Team</p>
+      </footer>
     </div>
   );
 };
