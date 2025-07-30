@@ -1,4 +1,4 @@
-# Hack-Attack
+# Fraud-Detection
 
 This project demonstrates an end-to-end fraud detection system with a React frontend, Flask backend, trained machine learning models, and mock data generation.
 
